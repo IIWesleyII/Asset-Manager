@@ -39,7 +39,10 @@ def sign_up():
         f_name = request.form.get('firstName')
         l_name = request.form.get('lastName')
         country = request.form.get('country')
+        base_currency = request.form.get('base_currency')
+        two_factor_auth_type = request.form.get('two_factor_auth_type')
         phone_number = request.form.get('phone_number')
+        payment_info = request.form.get('payment_info')
         password_1 = request.form.get('password1')
         password_2 = request.form.get('password2')
 
@@ -53,18 +56,25 @@ def sign_up():
             flash('First Name cannot be empty.', category='error')
         elif len(l_name) == 0:
             flash('Last Name cannot be empty.', category='error')
-        # evntually make country dropdown menu
         elif len(country) == 0:
             flash('Country cannot be empty.', category='error')
+        elif len(base_currency) == 0:
+            flash('Choose a base currency.', category='error')
+        elif len(two_factor_auth_type) == 0:
+            flash('Choose a type of two factor authentication.', category='error')
         elif len(phone_number) < 7 or phone_number.isdigit() == False:
             flash('Phone number bust be 10 numbers', category='error')
+        elif len(payment_info) != 16 or payment_info.isdigit() == False:
+            flash('Enter a correct 16 digit Credit card number.', category='error')    
         elif password_1 != password_2:
             flash('Password\'s do not match.', category='error')
         elif len(password_1) < 7:
             flash('Password must be at least 8 characters long.', category='error')
         else:
             new_user = Users(email=email, f_name=f_name, l_name=l_name, 
-                country=country, phone_number=phone_number, password=generate_password_hash(password_1, method='sha256'))
+                country=country, base_currency=base_currency, two_factor_auth_type=two_factor_auth_type,
+                phone_number=phone_number,payment_info=generate_password_hash(payment_info, method='sha256'),
+                password=generate_password_hash(password_1, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
 

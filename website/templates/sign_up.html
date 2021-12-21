@@ -279,6 +279,24 @@
         </select>
     </div>
     <div class="form-group">
+        <label for= "base_currency">Base Currency</label>
+        <br>
+        <select name="base_currency" id="base_currency">
+            <option value="Dollar">Dollar</option>
+            <option value="Euro">Euro</option>
+            <option value="Bitcoin">Bitcoin</option>
+            <option value="Ether">Ether</option>
+            <option value="Ada">Ada</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for= "two_factor_auth_type">Two Factor Authentication Type</label>
+        <br>
+        <select name="two_factor_auth_type" id="two_factor_auth_type">
+            <option value="phone">Phone</option>
+        </select>
+    </div>
+    <div class="form-group">
         <label for= "phone_number">Phone</label>
         <input 
             type="text" 
@@ -286,6 +304,16 @@
             id="phone_number" 
             name="phone_number" 
             placeholder="Enter Phone Number"
+        />
+    </div>
+    <div class="form-group">
+        <label for= "payment_info">Credit Card Number</label>
+        <input 
+            type="password" 
+            class="form-control" 
+            id="payment_info" 
+            name="payment_info" 
+            placeholder="Enter Credit Card Number"
         />
     </div>
     <div class="form-group">
