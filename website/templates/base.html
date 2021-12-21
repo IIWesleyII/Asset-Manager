@@ -14,10 +14,10 @@
     rel="stylesheet"
     href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     crossorigin="anonymous"
-  />
-    
+  /> 
     <title>{% block title %}AM{% endblock %}</title>
 </head>
+
 <body>
     <nav class = "navbar navbar-expand-lg navbar-dark bg-dark">
         <button 
@@ -44,6 +44,7 @@
             </div>
         </div>
     </nav>
+
     <!-------Flash alert messages--------->
     {% with messages = get_flashed_messages(with_categories=true)%}
         {% if messages %}
@@ -67,13 +68,7 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-
-
-
-
     <!------------------------------------>
-
-
     <div class="container">
         {% block content%}
         {% endblock %}

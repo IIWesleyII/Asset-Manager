@@ -25,7 +25,7 @@ def create_app():
     from .models import Users, Assets
 
     create_database(app)
-
+    # init flask login manager
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
