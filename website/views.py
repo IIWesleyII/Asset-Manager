@@ -21,7 +21,9 @@ def portfolio():
 def market():
     if request.method == 'POST':
         asset_type = request.form.get('asset_type')
-        if asset_type == 'cryptocurrency':
+        if asset_type == '':
+            pass
+        elif asset_type == 'cryptocurrency':
             return render_template("market.html", crypto_prices = get_crypto_prices(), user=current_user)
     return render_template("market.html", user=current_user)
 

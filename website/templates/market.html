@@ -6,7 +6,7 @@
         <label for= "asset_type">Asset Type</label>
         <br>
             <select name="asset_type" id="asset_type">
-                    <option value="all">All</option>
+                    <option value=""></option>
                     <option value="cryptocurrency">Cryptocurrency</option>
                     <option value="fiat">Fiat</option>
                     <option value="commodities">Commodities</option>
@@ -14,15 +14,13 @@
                     <option value="alternative">Alternative</option>
             </select>
             
-            <button type="submit">Submit</button>
+            <button type="submit">Enter</button>
     </div>
     
 </form>
 
-
-
 {% for x in crypto_prices %}
-    <p>{{x[0]}} ${{x[1]}}</p>
+    <p>{{x[0]}} {{x[1]}}</p>
 {% endfor %}
 
 {% endblock %}
