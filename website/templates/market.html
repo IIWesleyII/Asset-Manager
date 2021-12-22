@@ -15,15 +15,12 @@
             
             <button type="submit">Enter</button>
     </div>
+
+    {% for x in asset_prices %}
+        <p>{{x[0]}} {{x[1]}}</p>
+    {% endfor %}
+
     
 </form>
-
-{% for x in crypto_prices %}
-    <p>{{x[0]}} {{x[1]}}</p>
-{% endfor %}
-
-{% for x in commodity_prices %}
-    <p>{{x[0]}} {{x[1]}}</p>
-{% endfor %}
 
 {% endblock %}

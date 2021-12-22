@@ -3,3 +3,4 @@ venv
 website/.env
 website/crypto_prices.json
 website/crypto_prices.txt
+website/prices

@@ -1,7 +1,6 @@
 from flask import Blueprint,render_template, request, flash, redirect,url_for
 from flask_login import  login_required,  current_user
 
-
 from .finance import *
 views = Blueprint('views', __name__)
 
@@ -24,13 +23,13 @@ def market():
         if asset_type == '':
             pass
         elif asset_type == 'cryptocurrency':
-            return render_template("market.html", crypto_prices = get_crypto_prices(), user=current_user)
+            return render_template("market.html", asset_prices = get_crypto_prices(), user=current_user)
         elif asset_type == 'commodities':
-            return render_template("market.html", commodity_prices = get_commodity_prices(), user=current_user)
+            return render_template("market.html", asset_prices = get_commodity_prices(), user=current_user)
         elif asset_type == 'stocks':
-            pass
+            return render_template("market.html", asset_prices = get_stock_prices(), user=current_user)
         elif asset_type == 'alternative':
-            pass
+            return render_template("market.html", asset_prices = get_alternative_prices(), user=current_user)
         else:
             raise ValueError('Choose valid asset type.')
     return render_template("market.html", user=current_user)
