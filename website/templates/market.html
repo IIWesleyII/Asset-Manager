@@ -8,7 +8,6 @@
             <select name="asset_type" id="asset_type">
                     <option value=""></option>
                     <option value="cryptocurrency">Cryptocurrency</option>
-                    <option value="fiat">Fiat</option>
                     <option value="commodities">Commodities</option>
                     <option value="stocks">Stocks</option>
                     <option value="alternative">Alternative</option>
@@ -20,6 +19,10 @@
 </form>
 
 {% for x in crypto_prices %}
+    <p>{{x[0]}} {{x[1]}}</p>
+{% endfor %}
+
+{% for x in commodity_prices %}
     <p>{{x[0]}} {{x[1]}}</p>
 {% endfor %}
 

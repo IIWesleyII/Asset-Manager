@@ -1,3 +1,4 @@
+import requests
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
@@ -66,6 +67,16 @@ def print_crypto_prices():
     except (ConnectionError, Timeout, TooManyRedirects) as e:
         print(e)
 
+def print_commodity_prices():
+    access_key = os.getenv('COMMODITIES_API_KEY')
+    response = requests.get('https://commodities-api.com/api/latest?access_key='+access_key)
+    
+    with open('commodity_prices.json', 'a', encoding='utf-8') as f:
+            json.dump(response.json(), f, ensure_ascii=False, indent=4)
+    if response.status_code != 200:
+        print(response.status_code)
+
+
 '''
 GET CRYPTO PRICES
 returns data in the form of a list of tuples
@@ -92,6 +103,24 @@ def get_crypto_prices()-> list:
         prices.append((name,price))
     return prices
 
+def get_commodity_prices()-> list:
+    data = {}
+    prices = []
+    with open('website\prices\commodity_prices.json','r', encoding="utf8") as f:
+        data = json.load(f)
 
+    # current_user.base_currency is a string ex. ('Dollar','Euro',...)
+    currency_multiplier,currency_symbol = currency_converter(current_user.base_currency)
 
+    for key, val in data['data']['rates'].items():
+        name = key
+        price = val * currency_multiplier
 
+        if currency_symbol == '€' or currency_symbol == '$':
+            price = f'{currency_symbol}{price} per unit'
+        else:
+            price = f'{price} {currency_symbol} per unit'
+
+        prices.append((name,price))
+
+    return prices

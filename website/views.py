@@ -25,6 +25,14 @@ def market():
             pass
         elif asset_type == 'cryptocurrency':
             return render_template("market.html", crypto_prices = get_crypto_prices(), user=current_user)
+        elif asset_type == 'commodities':
+            return render_template("market.html", commodity_prices = get_commodity_prices(), user=current_user)
+        elif asset_type == 'stocks':
+            pass
+        elif asset_type == 'alternative':
+            pass
+        else:
+            raise ValueError('Choose valid asset type.')
     return render_template("market.html", user=current_user)
 
 @views.route('/profile')
