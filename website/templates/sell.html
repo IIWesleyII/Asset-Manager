@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Sell</h3>
+<h5>{{asset_name}} {{asset_price}}</h5>
+{{user.f_name}}
+<form method="POST">
+
+    <div class="form-group">
+        <label for="qty">Qty</label>
+        <input type="text" id="qty" name="qty">
+    </div>
+    <input type="submit" value="Sell">
+
+    
+
+</form>
+{% endblock %}

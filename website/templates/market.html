@@ -16,10 +16,19 @@
             <button type="submit">Enter</button>
     </div>
 
+    
+    <table>
     {% for x in asset_prices %}
-        <p>{{x[0]}} {{x[1]}}</p>
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{x[0]}}</td>
+            <td>{{x[1]}}</td>
+            <td><a href="{{ url_for('transaction.buy',asset_name=x[0], asset_price = x[1]) }}">Buy</a></td>
+            <td><a href="{{ url_for('transaction.sell',asset_name=x[0], asset_price= x[1]) }}">Sell</a></td>
+        </tr>
+    
     {% endfor %}
-
+</table>
     
 </form>
 

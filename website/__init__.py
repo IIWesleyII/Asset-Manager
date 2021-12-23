@@ -18,8 +18,10 @@ def create_app():
     #blueprints
     from .views import views
     from .auth import auth
+    from .transaction import transaction
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
+    app.register_blueprint(transaction, url_prefix='/')
     
     # create db
     from .models import Users, Assets

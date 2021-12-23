@@ -4,4 +4,3 @@ flask-sqlalchemy
 psycopg2
 python-dotenv
 requests
-polygon-api-client

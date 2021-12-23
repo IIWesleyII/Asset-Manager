@@ -19,22 +19,26 @@ def portfolio():
 @login_required
 def market():
     if request.method == 'POST':
-        asset_type = request.form.get('asset_type')
-        if asset_type == '':
+        asset = request.form.get('asset_type')
+
+        if asset == '':
             pass
-        elif asset_type == 'cryptocurrency':
+        elif asset == 'cryptocurrency':
             return render_template("market.html", asset_prices = get_crypto_prices(), user=current_user)
-        elif asset_type == 'commodities':
+        elif asset == 'commodities':
             return render_template("market.html", asset_prices = get_commodity_prices(), user=current_user)
-        elif asset_type == 'stocks':
+        elif asset == 'stocks':
             return render_template("market.html", asset_prices = get_stock_prices(), user=current_user)
-        elif asset_type == 'alternative':
+        elif asset == 'alternative':
             return render_template("market.html", asset_prices = get_alternative_prices(), user=current_user)
         else:
             raise ValueError('Choose valid asset type.')
+        
     return render_template("market.html", user=current_user)
+
 
 @views.route('/profile')
 @login_required
 def profile():
     return render_template("profile.html", user=current_user)
+

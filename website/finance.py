@@ -133,7 +133,7 @@ def get_commodity_prices()-> list:
 
     for key, val in data['data']['rates'].items():
         name = key
-        price = val * currency_multiplier
+        price = round(val,3) * currency_multiplier
 
         if currency_symbol == '€' or currency_symbol == '$':
             price = f'{currency_symbol}{price} per unit'
