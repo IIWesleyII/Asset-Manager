@@ -49,7 +49,7 @@ def sign_up():
         user = Users.query.filter_by(email=email).first()
 
         if user:
-            flash("Email already exists.")
+            flash("Email already exists.", category='error')
         elif len(email) < 4:
             flash('Email must be greater than 4 characters.', category='error')
         elif len(f_name) == 0:

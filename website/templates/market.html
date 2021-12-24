@@ -23,8 +23,10 @@
             <td>{{loop.index}}</td>
             <td>{{x[0]}}</td>
             <td>{{x[1]}}</td>
-            <td><a href="{{ url_for('transaction.buy',asset_name=x[0], asset_price = x[1]) }}">Buy</a></td>
-            <td><a href="{{ url_for('transaction.sell',asset_name=x[0], asset_price= x[1]) }}">Sell</a></td>
+            <td>{{x[2]}}</td>
+            
+            <td><a href="{{ url_for('transaction.buy',asset_name=x[0], asset_price = x[1], asset_type=x[2]) }}">Buy</a></td>
+            <td><a href="{{ url_for('transaction.sell',asset_name=x[0], asset_price= x[1], asset_type=x[2]) }}">Sell</a></td>
         </tr>
     
     {% endfor %}

@@ -117,7 +117,7 @@ def get_crypto_prices()-> list:
             price = f'{currency_symbol}{price}'
         else:
             price = f'{price} {currency_symbol}'
-        prices.append((name,price))
+        prices.append((name,price,'cryptocurrency'))
 
     return prices
 
@@ -140,7 +140,7 @@ def get_commodity_prices()-> list:
         else:
             price = f'{price} {currency_symbol} per unit'
 
-        prices.append((name,price))
+        prices.append((name,price, 'commodity'))
 
     return prices
 
@@ -163,7 +163,7 @@ def get_stock_prices()-> list:
         else:
             price = f'{price} {currency_symbol}'
 
-        prices.append((name,price))
+        prices.append((name,price,'stock'))
 
     return prices
 
@@ -183,7 +183,7 @@ def get_alternative_prices()->list:
         else:
             price = f'{price} {currency_symbol}'
 
-        prices.append((name,price))
+        prices.append((name,price,'alternative'))
 
     return prices
 
