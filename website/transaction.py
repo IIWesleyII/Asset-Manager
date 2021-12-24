@@ -60,22 +60,62 @@ def buy(asset_name,asset_price, asset_type):
 def sell(asset_name,asset_price, asset_type):
     display_total_qty = 0
     try:
-        assets = Assets.query.all()
+        assets = Assets.query.filter(Assets.user_id==current_user.id)
     except:
         raise Exception('Assets does not exist.')
+    '''
+    Display the amount of the asset the current user has
+    '''
+   
     if assets:
         for asset in assets:
-            if asset.user_id == current_user.id:
-                if asset.asset_name == asset_name:
-                    display_total_qty += int(asset.asset_qty)
+            if asset.asset_name == asset_name:
+                display_total_qty += int(asset.asset_qty)
         if display_total_qty > 0:
             flash(f"You have {display_total_qty} {asset_name} to sell.", category="success")
         else:
             flash(f"You currently do not have any {asset_name} to sell.", category="error")
     else:
         flash(f"You currently do not have any {asset_name} to sell.", category="error")
+    
+    '''
+    Subtract the sell amount from the current user's total asset value
+    '''
+    if request.method == 'POST':
+        try:
+            asset_qty = int(request.form.get('qty'))
+        except:
+            flash(f"qty must be integer", category="error")
 
-    asset_qty = request.form.get('qty')
-    new_price = change_price(asset_price)
+        new_price = change_price(asset_price)
+        try:
+            user = Users.query.get_or_404(current_user.id)
+        except:
+            raise Exception('User does not exist.')
+        if user.total_asset_value:
+            new_total_asset_value = float(user.total_asset_value)
+            for i in range(int(asset_qty)):
+                if new_total_asset_value <0:
+                    flash("You do not have enough assets to sell", category="error")
+                    break
+                else:
+                    new_total_asset_value -= new_price
 
+            if new_total_asset_value >=0:
+                user.total_asset_value = new_total_asset_value
+                flash(f"{asset_qty} sold!", category="success")
+        '''
+        change asset qty in the Assets table
+        '''
+        for asset in assets:
+            if int(asset.asset_qty) < asset_qty:
+                asset_qty -= int(asset.asset_qty)
+                asset.asset_qty = 0
+            elif int(asset.asset_qty) >= asset_qty:
+                 asset.asset_qty = int(asset.asset_qty) -asset_qty
+                 break
+            
+        db.session.commit()
+
+               
     return render_template("sell.html", user=current_user, asset_name=asset_name, asset_price=asset_price, asset_type=asset_type)
