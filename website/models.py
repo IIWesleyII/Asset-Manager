@@ -25,5 +25,6 @@ class Users(db.Model, UserMixin):
     is_premium = db.Column(db.Boolean, default=False)
     payment_info = db.Column(db.Integer)
     total_asset_value = db.Column(db.String(100))
+    asset_chart_plot_data = db.Column(db.LargeBinary)
     assets = db.relationship('Assets')
     

@@ -2,6 +2,8 @@ from flask import Blueprint,render_template, request, flash, redirect,url_for
 from flask_login import  login_required,  current_user
 from .models import Assets,Users
 from .finance import *
+from .helper import change_price, find_total_asset_value
+import pickle
 views = Blueprint('views', __name__)
 
 @views.route('/')
@@ -12,12 +14,19 @@ def home():
 @views.route('/portfolio')
 @login_required
 def portfolio():
+    # show graph
+    asset_chart_plot_data = pickle.loads(current_user.asset_chart_plot_data)
+    labels = [row[0] for row in asset_chart_plot_data]
+    values = [row[1] for row in asset_chart_plot_data]
+
+
     assets = Assets.query.filter(Assets.user_id==current_user.id)
     if assets:
-        return render_template("portfolio.html", user=current_user, assets=assets)
-        #for asset in assets:
-        #    print(asset.asset_name)
-    return render_template("portfolio.html", user=current_user)
+        return render_template("portfolio.html", user=current_user, assets=assets, 
+        total_asset_value = find_total_asset_value(assets), labels=labels,values=values)
+
+    return render_template("portfolio.html", user=current_user, assets=assets, 
+        total_asset_value = find_total_asset_value(assets), labels=labels,values=values)
 
 
 @views.route('/market',methods=['GET','POST'])

@@ -4,20 +4,11 @@ from sqlalchemy.sql.functions import user
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from .models import Users, Assets
+from .helper import *
+import datetime, pickle
 
-import datetime
-# x = datetime.datetime.now()
 
 transaction = Blueprint('transaction', __name__)
-
-# remove chars from asset_price
-def change_price(asset_price)->float:
-    new_price = ''
-    for ch in asset_price:
-        if ch.isdigit() or ch == '.':
-            new_price += ch
-    return float(new_price)
-
 
 @transaction.route('/transaction/buy/<string:asset_name>/<string:asset_price>/<string:asset_type>',methods=['GET','POST'])
 @login_required
@@ -40,15 +31,20 @@ def buy(asset_name,asset_price, asset_type):
             else:
                  user.total_asset_value = purchase_value
 
+            #update current user with new plot point for the totatal asset value over time graph
+            asset_chart_plot_data = generate_chart_plot_data(pickle.loads(user.asset_chart_plot_data))
+            user.asset_chart_plot_data = pickle.dumps(asset_chart_plot_data)
+            x = pickle.loads(user.asset_chart_plot_data)
+
             new_asset = Assets(asset_name=asset_name, asset_type =asset_type, asset_qty=asset_qty,
-            asset_price=asset_price, date=datetime.datetime.now(),user_id= current_user.id)
+            asset_price=new_price, date=datetime.datetime.now(),user_id= current_user.id)
 
             db.session.add(new_asset)
             db.session.commit()
 
             flash("Purchase successful", category="success")
 
-            return render_template("market.html", user=current_user)
+            return render_template("market.html", user=current_user,asset_name=asset_name, asset_price=asset_price, asset_type=asset_type)
         else:
             flash("Invalid credit card number", category="error")
 
@@ -100,9 +96,15 @@ def sell(asset_name,asset_price, asset_type):
                     break
                 else:
                     new_total_asset_value -= new_price
+                    
 
             if new_total_asset_value >=0:
                 user.total_asset_value = new_total_asset_value
+
+                #update current user with new plot point for the total asset value over time graph
+                asset_chart_plot_data = generate_chart_plot_data(pickle.loads(user.asset_chart_plot_data))
+                user.asset_chart_plot_data = pickle.dumps(asset_chart_plot_data)
+
                 flash(f"{asset_qty} sold!", category="success")
         '''
         change asset qty in the Assets table
@@ -116,6 +118,6 @@ def sell(asset_name,asset_price, asset_type):
                  break
             
         db.session.commit()
-        return render_template("market.html", user=current_user)
+        return render_template("market.html", user=current_user,asset_name=asset_name, asset_price=asset_price, asset_type=asset_type)
                
     return render_template("sell.html", user=current_user, asset_name=asset_name, asset_price=asset_price, asset_type=asset_type)

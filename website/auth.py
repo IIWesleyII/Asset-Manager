@@ -2,7 +2,9 @@ from flask import Blueprint, render_template, request, flash, redirect,url_for
 from .models import Users
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
+from .helper import *
 from flask_login import login_user, login_required, logout_user, current_user
+import pickle
 auth = Blueprint('auth', __name__)
 
 
@@ -71,10 +73,14 @@ def sign_up():
         elif len(password_1) < 7:
             flash('Password must be at least 8 characters long.', category='error')
         else:
+            # plot first point on asset graph with beginning data
+            # then pickle list to be saved in database
+            asset_chart_plot_data = pickle.dumps(generate_chart_plot_data([]))
+
             new_user = Users(email=email, f_name=f_name, l_name=l_name, 
                 country=country, base_currency=base_currency, two_factor_auth_type=two_factor_auth_type,
                 phone_number=phone_number,payment_info=generate_password_hash(payment_info, method='sha256'),
-                password=generate_password_hash(password_1, method='sha256'))
+                password=generate_password_hash(password_1, method='sha256'), asset_chart_plot_data = asset_chart_plot_data)
             db.session.add(new_user)
             db.session.commit()
 

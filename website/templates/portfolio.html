@@ -6,6 +6,36 @@
     }
 </style>
 <h1>{{user.f_name}} {{user.l_name}}'s Portfolio</h1>
+
+<!--Generate line graph of value of assets over time-->
+<canvas id ="lineChart" width="900" height="400"></canvas>
+<script>
+    var ctx = document.getElementById("lineChart").getContext("2d");
+    var lineChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: {{labels | safe}},
+            datasets : [
+                {
+                    label: "Asset Value",
+                    data: {{values| safe}},
+                    fill: false,
+                    borderColor: "rgb(0,212,49)",
+                    lineTension: 0.1
+                }
+            ]
+        },
+        options:{
+            responsive: false
+        }
+    })
+
+</script>
+
+
+
+
+
 <br>
 <table style = "width:100%">
         <tr>
@@ -21,12 +51,17 @@
                 <td>{{asset.asset_type}}</td>
                 <td>{{asset.asset_name}}</td>
                 <td>{{asset.asset_qty}}</td>
-                <td>{{asset.asset_qty|int*asset.asset_price|int}}</td>
-
+                <td>{{asset.asset_qty|int * asset.asset_price|float}}</td>
             </tr>
         
     {% endif %}
 {%endfor%}
+            <tr>
+                <th></th>  
+                <th></th> 
+                <th></th> 
+                <th>Total Asset Value: {{total_asset_value}} {{user.base_currency}}</th>
+            </tr>
 </table>
 
 {% endblock %}
