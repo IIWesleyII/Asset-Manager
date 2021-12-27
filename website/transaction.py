@@ -116,6 +116,6 @@ def sell(asset_name,asset_price, asset_type):
                  break
             
         db.session.commit()
-
+        return render_template("market.html", user=current_user)
                
     return render_template("sell.html", user=current_user, asset_name=asset_name, asset_price=asset_price, asset_type=asset_type)

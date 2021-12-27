@@ -16,6 +16,7 @@
     crossorigin="anonymous"
   /> 
     <title>{% block title %}AM{% endblock %}</title>
+    <link rel="icon" href="static\am-logo.png">
 </head>
 
 <body>
@@ -32,13 +33,13 @@
         <div class = "collapse navbar-collapse" id="navbar">
             <div class="navbar-nav">
                 {% if user.is_authenticated %}
-                <a class="nav-item nav-link" id="home" href="/">Home</a>
+                <a class="nav-item nav-link" id="home" href="/"><img src="static\am-logo.png"></a>
                 <a class="nav-item nav-link" id="profile" href="/profile">Profile</a>
                 <a class="nav-item nav-link" id="portfolio" href="/portfolio">Portfolio</a>
                 <a class="nav-item nav-link" id="market" href="/market">Market</a>
                 <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
                 {% else %}
-                <a class="nav-item nav-link" id="home" href="/">Home</a>
+                <a class="nav-item nav-link" id="home" href="/"><img src="static\am-logo.png"></a>
                 <a class="nav-item nav-link" id="login" href="/login">Login</a>
                 <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
                 {% endif %}

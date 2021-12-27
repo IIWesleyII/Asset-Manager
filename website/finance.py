@@ -95,6 +95,13 @@ def print_stock_prices():
         print(response.status_code)
 
 '''
+API Data
+print_commodity_prices()
+print_crypto_prices()
+print_stock_prices()
+
+'''
+'''
 GET PRICES FOR ASSETS
 returns data in the form of a list of tuples
 [('Bitcoin', 48705.177689493146), (...)]

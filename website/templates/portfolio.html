@@ -1,4 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Portfolio</h1>
+<style>
+    table, th, td {
+      border:3px solid black;
+    }
+</style>
+<h1>{{user.f_name}} {{user.l_name}}'s Portfolio</h1>
+<br>
+<table style = "width:100%">
+        <tr>
+            <th>Asset Type</th>
+            <th>Asset Name</th>
+            <th>Asset Quantity</th>
+            <th>Asset Total Value</th>
+           
+        </tr>
+{% for asset in assets %}
+    {%if asset.asset_qty|int > 0 %}
+            <tr>
+                <td>{{asset.asset_type}}</td>
+                <td>{{asset.asset_name}}</td>
+                <td>{{asset.asset_qty}}</td>
+                <td>{{asset.asset_qty|int*asset.asset_price|int}}</td>
+
+            </tr>
+        
+    {% endif %}
+{%endfor%}
+</table>
+
 {% endblock %}

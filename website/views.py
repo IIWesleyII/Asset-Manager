@@ -1,6 +1,6 @@
 from flask import Blueprint,render_template, request, flash, redirect,url_for
 from flask_login import  login_required,  current_user
-
+from .models import Assets,Users
 from .finance import *
 views = Blueprint('views', __name__)
 
@@ -12,6 +12,11 @@ def home():
 @views.route('/portfolio')
 @login_required
 def portfolio():
+    assets = Assets.query.filter(Assets.user_id==current_user.id)
+    if assets:
+        return render_template("portfolio.html", user=current_user, assets=assets)
+        #for asset in assets:
+        #    print(asset.asset_name)
     return render_template("portfolio.html", user=current_user)
 
 
