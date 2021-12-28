@@ -19,7 +19,6 @@ def portfolio():
     labels = [row[0] for row in asset_chart_plot_data]
     values = [row[1] for row in asset_chart_plot_data]
 
-
     assets = Assets.query.filter(Assets.user_id==current_user.id)
     if assets:
         return render_template("portfolio.html", user=current_user, assets=assets, 

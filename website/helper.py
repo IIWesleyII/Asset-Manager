@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask_login import current_user
-import pickle
+
 # remove chars from asset_price
 def change_price(asset_price)->float:
     new_price = ''

@@ -7,18 +7,26 @@ from .models import Users, Assets
 from .helper import *
 import datetime, pickle
 
-
 transaction = Blueprint('transaction', __name__)
 
+''''
+buy()
+Function allows for users to buy assets using their payment type
+    i) accepts and authenticates payment info
+    ii) updates user's asset balance
+    iii) updates user's portfolio graph
+    iv) create's new asset for user
+'''
 @transaction.route('/transaction/buy/<string:asset_name>/<string:asset_price>/<string:asset_type>',methods=['GET','POST'])
 @login_required
 def buy(asset_name,asset_price, asset_type):
     if request.method == 'POST':
         asset_qty = request.form.get('qty')
         credit_card_number = request.form.get('credit_card_number')
-
+        # change_price, defined in .helper, converts and strips chars from the string price into a float
         new_price = change_price(asset_price)
         purchase_value =new_price*int(asset_qty)
+
         if check_password_hash(current_user.payment_info, credit_card_number):
             try:
                 user = Users.query.get_or_404(current_user.id)
@@ -50,7 +58,14 @@ def buy(asset_name,asset_price, asset_type):
 
     return render_template("buy.html", user=current_user, asset_name=asset_name, asset_price=asset_price, asset_type=asset_type)
 
-
+''''
+sell()
+Function allows for users to sell assets using their payment type
+    i) check if user has enough assets to sell
+    ii) updates user's asset balance
+    iii) updates user's portfolio graph
+    iv) updates asset for user
+'''
 @transaction.route('/transaction/sell/<string:asset_name>/<string:asset_price>/<string:asset_type>',methods=['GET','POST'])
 @login_required
 def sell(asset_name,asset_price, asset_type):

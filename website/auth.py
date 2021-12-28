@@ -27,6 +27,7 @@ def login():
 
     return render_template('login.html', user=current_user)
 
+
 @auth.route('/logout')
 @login_required
 def logout():
@@ -75,6 +76,7 @@ def sign_up():
         else:
             # plot first point on asset graph with beginning data
             # then pickle list to be saved in database
+            # data points look like: [('12-28-2021', 38523.39)] where (date,total portfolio value)
             asset_chart_plot_data = pickle.dumps(generate_chart_plot_data([]))
 
             new_user = Users(email=email, f_name=f_name, l_name=l_name, 
@@ -87,7 +89,6 @@ def sign_up():
             login_user(new_user, remember=True)
             flash('Account created!', category='success')
             return redirect(url_for('views.portfolio'))
-
 
     return render_template('sign_up.html',user=current_user)
 

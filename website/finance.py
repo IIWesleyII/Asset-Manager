@@ -95,14 +95,15 @@ def print_stock_prices():
         print(response.status_code)
 
 '''
-API Data
+Send API Data to JSON files
 print_commodity_prices()
 print_crypto_prices()
 print_stock_prices()
 
 '''
+
 '''
-GET PRICES FOR ASSETS
+GET PRICES FOR Crytpocurrency
 returns data in the form of a list of tuples
 [('Bitcoin', 48705.177689493146), (...)]
 
@@ -128,7 +129,11 @@ def get_crypto_prices()-> list:
 
     return prices
 
-
+'''
+GET PRICES FOR COMMODITIES
+returns data in the form of a list of tuples
+[('JFH', 705.2), (...)]
+'''
 def get_commodity_prices()-> list:
     data = {}
     prices = []
@@ -152,6 +157,11 @@ def get_commodity_prices()-> list:
     return prices
 
 
+'''
+GET PRICES FOR STOCKS
+returns data in the form of a list of tuples
+[('AAPL', 178.2), (...)]
+'''
 def get_stock_prices()-> list:
     data = {}
     prices = []
@@ -174,6 +184,13 @@ def get_stock_prices()-> list:
 
     return prices
 
+
+'''
+GET PRICES FOR ALTERNATIVE ASSETS
+ - alternative assets such as cars, luxury goods, housing, etc
+returns data in the form of a list of tuples
+[('WATCH id# 102938', 1078.2), (...)]
+'''
 def get_alternative_prices()->list:
     inpt_lst = [("ROLEX watch (Cosmograph Daytona Chronograph Automatic Men's Oysterflex Watch 116518BKCSR)", 56000.00),("House #8293", 976883.00)]
     prices = []
