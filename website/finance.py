@@ -18,10 +18,10 @@ CURRENCY CONVERTER
 def currency_converter(base_currency):
     conversion_factor = 0
     currency_symbol = ''
-    if base_currency == 'Dollar':
+    if base_currency == 'Dollars':
         conversion_factor = 1
         currency_symbol = '$'
-    elif base_currency == 'Euro':
+    elif base_currency == 'Euros':
         conversion_factor = 0.88
         currency_symbol = '€'
     elif base_currency == 'Ether':

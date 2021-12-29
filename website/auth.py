@@ -89,7 +89,6 @@ def change_password():
             user = Users.query.filter_by(email=email).first()
             if user:
                 user.password = generate_password_hash(password1, method='sha256')
-                print('yoooooooo')
                 return redirect(url_for('auth.login'))
             else:
                 flash('Email does not exist.', category='error')
