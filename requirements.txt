@@ -4,3 +4,4 @@ flask-sqlalchemy
 psycopg2
 python-dotenv
 requests
+twilio

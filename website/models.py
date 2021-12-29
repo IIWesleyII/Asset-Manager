@@ -27,4 +27,7 @@ class Users(db.Model, UserMixin):
     total_asset_value = db.Column(db.String(100))
     asset_chart_plot_data = db.Column(db.LargeBinary)
     assets = db.relationship('Assets')
-    
+
+class Codes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    auth_code = db.Column(db.Integer)

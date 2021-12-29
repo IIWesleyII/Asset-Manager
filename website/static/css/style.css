@@ -1,3 +1,7 @@
 body {
   background-color: #fafcfa;
 }
+.forgot-password {
+  float: right;
+  margin-right: 10px;
+}

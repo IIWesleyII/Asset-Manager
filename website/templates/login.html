@@ -24,6 +24,10 @@
         />
     </div>
     <br />
-    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="submit" class="btn btn-primary" >Login</button>
+    <div class="forgot-password">
+        <a href="{{ url_for('auth.password_recovery')}}" >Forgot Password?</a>
+    </div>
+    
 </form>
 {% endblock %}

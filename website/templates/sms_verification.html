@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+    <h5 align="center">Verify your credentials</h5>
+    <br>
+    <form method="POST">
+        
+        <div class="form-group">
+            <h5>Enter recovery code sent to email</h5>
+            <input 
+                type="text" 
+                class="form-control" 
+                id="email_code" 
+                name="email_code" 
+                placeholder="Enter email code"
+            />
+        </div>
+        <div class="form-group">
+            <h5>Enter recovery code sent to phone</h5>
+            <input 
+                type="text" 
+                class="form-control" 
+                id="sms_code" 
+                name="sms_code" 
+                placeholder="Enter sms code"
+            />
+        </div>
+        <button type="submit" class="btn btn-primary" >Enter</button>
+    </form>
+        
+{%endblock%}

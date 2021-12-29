@@ -1,12 +1,22 @@
-from flask import Blueprint, render_template, request, flash, redirect,url_for
-from .models import Users
+from flask import Blueprint, render_template, request, flash, redirect,url_for, session
+from sqlalchemy.sql import func
+from .models import Users, Codes
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from .helper import *
+from .send_sms import send_sms_code, send_email_code
 from flask_login import login_user, login_required, logout_user, current_user
-import pickle
+import pickle, os
+from dotenv import load_dotenv
+load_dotenv()
+
 auth = Blueprint('auth', __name__)
 
+# get a recovery code from the database. (password recovery)
+def generate_auth_codes() -> int:
+    code_1 = Codes.query.order_by(func.random()).first().auth_code
+    code_2 = Codes.query.order_by(func.random()).first().auth_code
+    return code_1, code_2
 
 @auth.route('/login', methods=['GET','POST'])
 def login():
@@ -26,6 +36,68 @@ def login():
             flash('Email does not exist.', category='error')
 
     return render_template('login.html', user=current_user)
+
+
+@auth.route("/password_recovery", methods=['GET','POST'])
+def password_recovery():
+
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user = Users.query.filter_by(email=email).first()
+
+        if user:
+            email_verification_code, sms_verification_code = generate_auth_codes()
+            send_email_code(user.email, email_verification_code)
+            send_sms_code('+19492856292', sms_verification_code)
+            
+            session['email_verification_code'] =  email_verification_code
+            session['sms_verification_code'] = sms_verification_code
+
+            return redirect(url_for('auth.sms_verification'))
+        else:
+            flash('Email does not exist.', category='error')
+
+    return render_template('password_recovery.html', user=current_user)
+
+
+@auth.route("/sms_verification/", methods=['GET','POST'])
+def sms_verification():
+
+    email_verification_code = session.get('email_verification_code',None)
+    sms_verification_code = session.get('sms_verification_code', None)
+    # get form data, compare to session data
+    if request.method == 'POST':
+        user_input_email_code = request.form.get('email_code')
+        user_input_sms_code = request.form.get('sms_code')
+
+        if int(user_input_email_code) == email_verification_code and int(user_input_sms_code) == sms_verification_code:
+            return redirect(url_for('auth.change_password'))
+        else:
+            flash('Incorrect recovery codes', category='error')
+
+
+    return render_template('sms_verification.html', user=current_user,)
+
+
+@auth.route("/change_password", methods=['GET','POST'])
+def change_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+        if password1 == password2:
+            user = Users.query.filter_by(email=email).first()
+            if user:
+                user.password = generate_password_hash(password1, method='sha256')
+                print('yoooooooo')
+                return redirect(url_for('auth.login'))
+            else:
+                flash('Email does not exist.', category='error')
+        else:
+            flash('Passwords must match', category='error')
+
+
+    return render_template('change_password.html', user=current_user)
 
 
 @auth.route('/logout')

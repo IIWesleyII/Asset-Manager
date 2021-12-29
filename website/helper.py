@@ -24,6 +24,3 @@ def generate_chart_plot_data(lst=[])->list:
     else:
         lst.append((f'{datetime.now().strftime("%m-%d-%Y")}',current_user.total_asset_value))
         return lst
-
-
-
