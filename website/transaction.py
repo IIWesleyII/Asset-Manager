@@ -37,7 +37,7 @@ def buy(asset_name,asset_price, asset_type):
             if current_user.total_asset_value:
                 user.total_asset_value = float(current_user.total_asset_value) +  purchase_value
             else:
-                 user.total_asset_value = purchase_value
+                 user.total_asset_value = round(purchase_value,3)
 
             #update current user with new plot point for the totatal asset value over time graph
             asset_chart_plot_data = generate_chart_plot_data(pickle.loads(user.asset_chart_plot_data))
@@ -52,7 +52,7 @@ def buy(asset_name,asset_price, asset_type):
 
             flash("Purchase successful", category="success")
 
-            return render_template("market.html", user=current_user,asset_name=asset_name, asset_price=asset_price, asset_type=asset_type)
+            return render_template("market.html",user=current_user)
         else:
             flash("Invalid credit card number", category="error")
 
@@ -114,7 +114,7 @@ def sell(asset_name,asset_price, asset_type):
                     
 
             if new_total_asset_value >=0:
-                user.total_asset_value = new_total_asset_value
+                user.total_asset_value = round(new_total_asset_value,3)
 
                 #update current user with new plot point for the total asset value over time graph
                 asset_chart_plot_data = generate_chart_plot_data(pickle.loads(user.asset_chart_plot_data))

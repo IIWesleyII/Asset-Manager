@@ -34,9 +34,7 @@ def market():
     if request.method == 'POST':
         asset = request.form.get('asset_type')
 
-        if asset == '':
-            pass
-        elif asset == 'cryptocurrency':
+        if asset == 'cryptocurrency':
             return render_template("market.html", asset_prices = get_crypto_prices(), user=current_user)
         elif asset == 'commodities':
             return render_template("market.html", asset_prices = get_commodity_prices(), user=current_user)
@@ -47,7 +45,7 @@ def market():
         else:
             raise ValueError('Choose valid asset type.')
         
-    return render_template("market.html", user=current_user)
+    return render_template("market.html", asset_prices = get_crypto_prices(), user=current_user)
 
 
 @views.route('/profile')

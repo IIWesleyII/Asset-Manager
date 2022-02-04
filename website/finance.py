@@ -119,7 +119,8 @@ def get_crypto_prices()-> list:
     
     for i in range(len(data['data'])):
         name = data['data'][i]['name']
-        price = round(float(data['data'][i]['quote']['USD']['price']),3) * currency_multiplier
+        # round price to 3 decimal places
+        price = round(float(data['data'][i]['quote']['USD']['price']) * currency_multiplier, 3)
 
         if currency_symbol == '€' or currency_symbol == '$':
             price = f'{currency_symbol}{price}'
@@ -145,7 +146,8 @@ def get_commodity_prices()-> list:
 
     for key, val in data['data']['rates'].items():
         name = key
-        price = round(val,3) * currency_multiplier
+        # round price to 3 decimal places
+        price = round(val * currency_multiplier,3)
 
         if currency_symbol == '€' or currency_symbol == '$':
             price = f'{currency_symbol}{price} per unit'
@@ -173,7 +175,8 @@ def get_stock_prices()-> list:
     
     for i in range(len(data['results'])):
         name = data['results'][i]['T']
-        price = data['results'][i]['h'] * currency_multiplier
+        # round price to 3 decimal places
+        price = round(data['results'][i]['h'] * currency_multiplier, 3)
 
         if currency_symbol == '€' or currency_symbol == '$':
             price = f'{currency_symbol}{price}'
@@ -200,7 +203,8 @@ def get_alternative_prices()->list:
 
     for i in range(len(inpt_lst)):
         name = inpt_lst[i][0]
-        price = inpt_lst[i][1] * currency_multiplier
+        # round price to 3 decimal places
+        price = round(inpt_lst[i][1] * currency_multiplier,3)
 
         if currency_symbol == '€' or currency_symbol == '$':
             price = f'{currency_symbol}{price}'
