@@ -23,38 +23,36 @@ def buy(asset_name,asset_price, asset_type):
     if request.method == 'POST':
         asset_qty = request.form.get('qty')
         credit_card_number = request.form.get('credit_card_number')
-        # change_price, defined in .helper, converts and strips chars from the string price into a float
-        new_price = change_price(asset_price)
-        purchase_value =new_price*int(asset_qty)
-
-        if check_password_hash(current_user.payment_info, credit_card_number):
-            try:
-                user = Users.query.get_or_404(current_user.id)
-            except:
-                raise Exception('User does not exist.')
-
-            # update curr user total_asset value by purchase value
-            if current_user.total_asset_value:
-                user.total_asset_value = float(current_user.total_asset_value) +  purchase_value
-            else:
-                 user.total_asset_value = round(purchase_value,3)
-
-            #update current user with new plot point for the totatal asset value over time graph
-            asset_chart_plot_data = generate_chart_plot_data(pickle.loads(user.asset_chart_plot_data))
-            user.asset_chart_plot_data = pickle.dumps(asset_chart_plot_data)
-            x = pickle.loads(user.asset_chart_plot_data)
-
-            new_asset = Assets(asset_name=asset_name, asset_type =asset_type, asset_qty=asset_qty,
-            asset_price=new_price, date=datetime.datetime.now(),user_id= current_user.id)
-
-            db.session.add(new_asset)
-            db.session.commit()
-
-            flash("Purchase successful", category="success")
-
-            return render_template("market.html",user=current_user)
+        
+        if not asset_qty.isdigit():
+            flash("Invalid quantity", category="error")
         else:
-            flash("Invalid credit card number", category="error")
+
+            # change_price, defined in .helper, converts and strips chars from the string price into a float
+            new_price = change_price(asset_price)
+            purchase_value =new_price*int(asset_qty)
+            if check_password_hash(current_user.payment_info, credit_card_number):
+                try:
+                    user = Users.query.get_or_404(current_user.id)
+                except:
+                    raise Exception('User does not exist.')
+                # update curr user total_asset value by purchase value
+                if current_user.total_asset_value:
+                    user.total_asset_value = float(current_user.total_asset_value) +  purchase_value
+                else:
+                    user.total_asset_value = round(purchase_value,3)
+                #update current user with new plot point for the totatal asset value over time graph
+                asset_chart_plot_data = generate_chart_plot_data(pickle.loads(user.asset_chart_plot_data))
+                user.asset_chart_plot_data = pickle.dumps(asset_chart_plot_data)
+                x = pickle.loads(user.asset_chart_plot_data)
+                new_asset = Assets(asset_name=asset_name, asset_type =asset_type, asset_qty=asset_qty,
+                asset_price=new_price, date=datetime.datetime.now(),user_id= current_user.id)
+                db.session.add(new_asset)
+                db.session.commit()
+                flash("Purchase successful", category="success")
+                return render_template("market.html",user=current_user)
+            else:
+                flash("Invalid credit card number", category="error")
 
     return render_template("buy.html", user=current_user, asset_name=asset_name, asset_price=asset_price, asset_type=asset_type)
 

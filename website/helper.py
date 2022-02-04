@@ -15,7 +15,8 @@ def find_total_asset_value(assets) -> float:
     for asset in assets:
         if float(asset.asset_price) > 0 and int(asset.asset_qty) > 0:
             total_value += int(asset.asset_qty) * float(asset.asset_price)
-    return total_value
+
+    return round(total_value,3)
 
 # append to the list of asset changes over time
 def generate_chart_plot_data(lst=[])->list:
