@@ -18,6 +18,7 @@ def generate_auth_codes() -> int:
     code_2 = Codes.query.order_by(func.random()).first().auth_code
     return code_1, code_2
 
+
 @auth.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':

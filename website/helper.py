@@ -20,7 +20,7 @@ def find_total_asset_value(assets) -> float:
 # append to the list of asset changes over time
 def generate_chart_plot_data(lst=[])->list:
     if lst == []:
-        return [(f'{datetime.now().strftime("%m-%d-%Y")}',0.0)]
+        return [(f'{datetime.now().ctime()}',0.0)]
     else:
-        lst.append((f'{datetime.now().strftime("%m-%d-%Y")}',current_user.total_asset_value))
+        lst.append((f'{datetime.now().ctime()}',current_user.total_asset_value))
         return lst

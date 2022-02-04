@@ -16,7 +16,7 @@ def send_sms_code(phone_num, sms_verification_code):
     client.messages.create(to=phone_num, 
                         from_=os.getenv('SMS_FROM'), 
                         body=f"{sms_verification_code}")
-
+                       
     print(f'sms code: {sms_verification_code}')
 
 
