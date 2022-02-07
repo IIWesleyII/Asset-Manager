@@ -38,7 +38,7 @@ def buy(asset_name,asset_price, asset_type):
                     raise Exception('User does not exist.')
                 # update curr user total_asset value by purchase value
                 if current_user.total_asset_value:
-                    user.total_asset_value = float(current_user.total_asset_value) +  purchase_value
+                    user.total_asset_value = round(float(current_user.total_asset_value) +  purchase_value,3)
                 else:
                     user.total_asset_value = round(purchase_value,3)
 
