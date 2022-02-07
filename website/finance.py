@@ -7,6 +7,13 @@ from flask_login import current_user
 
 from dotenv import load_dotenv
 load_dotenv()
+'''
+This file contains 
+- functions to get outside financial API data
+- convert currency and assets
+- generate json files of current asset prices
+
+'''
 
 '''
 CURRENCY CONVERTER
@@ -214,7 +221,3 @@ def get_alternative_prices()->list:
         prices.append((name,price,'alternative'))
 
     return prices
-
-
-        
-
