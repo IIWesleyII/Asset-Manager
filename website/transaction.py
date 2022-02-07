@@ -41,13 +41,25 @@ def buy(asset_name,asset_price, asset_type):
                     user.total_asset_value = float(current_user.total_asset_value) +  purchase_value
                 else:
                     user.total_asset_value = round(purchase_value,3)
+
                 #update current user with new plot point for the totatal asset value over time graph
                 asset_chart_plot_data = generate_chart_plot_data(pickle.loads(user.asset_chart_plot_data))
                 user.asset_chart_plot_data = pickle.dumps(asset_chart_plot_data)
                 x = pickle.loads(user.asset_chart_plot_data)
-                new_asset = Assets(asset_name=asset_name, asset_type =asset_type, asset_qty=asset_qty,
-                asset_price=new_price, date=datetime.datetime.now(),user_id= current_user.id)
-                db.session.add(new_asset)
+
+                # create new asset if asset name does not exists in db
+                #
+
+                asset = Assets.query.filter(Assets.user_id==current_user.id, Assets.asset_name==asset_name).first()
+                if asset:
+                    asset.asset_qty = int(asset.asset_qty) + int(asset_qty)
+                    asset.asset_price = new_price
+                    asset.date = datetime.datetime.now()
+                else:
+                    new_asset = Assets(asset_name=asset_name, asset_type =asset_type, asset_qty=asset_qty,
+                    asset_price=new_price, date=datetime.datetime.now(),user_id=current_user.id)
+                    db.session.add(new_asset)
+
                 db.session.commit()
                 flash("Purchase successful", category="success")
                 return render_template("market.html",user=current_user)
