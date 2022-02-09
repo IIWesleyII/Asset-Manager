@@ -1,6 +1,6 @@
 # Asset-Manager
 
-### Platform for buying and selling financial and non-financial assets.
+### Platform for buying and selling assets.
 
 ## Dependencies
 
