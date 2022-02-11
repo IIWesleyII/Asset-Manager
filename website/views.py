@@ -2,7 +2,6 @@ from flask import Blueprint,render_template, request, flash, redirect,url_for
 from flask_login import  login_required,  current_user
 from .models import Assets,Users
 from .finance import *
-from .helper import change_price, find_total_asset_value
 import pickle
 views = Blueprint('views', __name__)
 

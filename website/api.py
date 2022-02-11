@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import  Blueprint
 from .models import Users, Assets
+from .finance import *
 
 api = Blueprint('api',__name__)
 
