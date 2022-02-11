@@ -8,6 +8,7 @@ class Assets(db.Model):
     asset_type = db.Column(db.String(100))
     asset_qty = db.Column(db.String(100))
     asset_price = db.Column(db.String(100))
+    asset_value = db.Column(db.String(100))
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     

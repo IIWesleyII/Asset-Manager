@@ -74,12 +74,17 @@ def get_crypto_prices():
 
     except (ConnectionError, Timeout, TooManyRedirects) as e:
         print(e)
+
+    '''
+    -overwrite crypto prices
+    - 
+    '''
+    
 '''
 Get commodity api data from commodities-api
 https://commodities-api.com/documentation
 
 '''
-
 def get_commodity_prices():
     api_key = os.getenv('COMMODITIES_API_KEY')
     response = requests.get('https://commodities-api.com/api/latest?access_key='+api_key)
@@ -88,12 +93,13 @@ def get_commodity_prices():
             json.dump(response.json(), f, ensure_ascii=False, indent=4)
     if response.status_code != 200:
         print(response.status_code)
+
+
 '''
 Get stock api data from polygon
 https://polygon.io/docs/stocks/getting-started
 
 '''
-
 def get_stock_prices():
     api_key = os.getenv('STOCKS_API_KEY')
     response = requests.get('https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/2021-12-22?adjusted=true&apiKey='+api_key)
@@ -229,6 +235,7 @@ def list_alternative_prices()->list:
     - async?
 '''
 # get the current asset prices from various asset APIs
+# remeber to coment out any calls to this function to prevent API fees
 def refresh_prices():
     get_commodity_prices()
     get_crypto_prices()
@@ -243,17 +250,66 @@ def change_price(asset_price)->float:
             new_price += ch
     return float(new_price)
 
+
 # find the total evaluation of a users assests
 def find_total_asset_value(assets) -> float:
+    currency_multiplier,currency_symbol = currency_converter(current_user.base_currency)
+    refresh_prices()
+
+    stock_data,commodity_data,crypto_data, = {},{},{}
+    with open('website\prices\crypto_prices.json','r', encoding="utf8") as f:
+        crypto_data = json.load(f)
+    with open('website\prices\commodity_prices.json','r', encoding="utf8") as f:
+        commodity_data = json.load(f)
+    with open('website\prices\stock_prices.json','r', encoding="utf8") as f:
+        stock_data = json.load(f)
+    with open(r'website\prices\alternative_asset_prices.json','r', encoding="utf8") as f:
+        alt_data = json.load(f)
+    
+    asset_dict = {}
+    ## generate list of all asset prices in dict form
+    # i) crypto
+    for i in range(len(crypto_data['data'])):
+        name = crypto_data['data'][i]['name']
+        price = round(float(crypto_data['data'][i]['quote']['USD']['price']) * currency_multiplier, 3)
+        asset_dict[name] = price
+    # ii) commodities
+    for key, val in commodity_data['data']['rates'].items():
+        name = key
+        price = round(val * currency_multiplier,3)
+        asset_dict[name] = price
+    # iii) stocks
+    for i in range(len(stock_data['results'])):
+        name = stock_data['results'][i]['T']
+        # round price to 3 decimal places
+        price = round(stock_data['results'][i]['h'] * currency_multiplier, 3)
+        asset_dict[name] = price
+    # iv) aletnative investments
+    for key,val in alt_data.items():
+        name = key
+        price = val
+        asset_dict[name] = price
+    ##
+    #now should save dict to prices folder
+
+
     total_value = 0.0
     for asset in assets:
-        if float(asset.asset_price) > 0 and int(asset.asset_qty) > 0:
-            total_value += int(asset.asset_qty) * float(asset.asset_price)
-
+        ## lookup current price of asset 
+        asset_name = asset.asset_name
+        try:
+            curr_price=asset_dict[asset_name]
+            if float(curr_price) > 0 and int(asset.asset_qty) > 0:
+                total_value += int(asset.asset_qty) * float(curr_price)
+        except:
+            raise ValueError(f"{asset_name} ,Key not found")
+        ##
     return round(total_value,3)
+
 
 # append to the list of asset changes over time
 def generate_chart_plot_data(lst=[])->list:
+    # refresh_prices()
     if lst == []:
         return [(f'{datetime.now().ctime()}',0.0)]
     else:

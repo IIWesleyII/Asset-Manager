@@ -42,7 +42,7 @@
             <th>Asset Type</th>
             <th>Asset Name</th>
             <th>Asset Quantity</th>
-            <th>Asset Total Value</th>
+            <th>Asset Buy Price</th>
            
         </tr>
 {% for asset in assets %}
@@ -51,7 +51,7 @@
                 <td>{{asset.asset_type}}</td>
                 <td>{{asset.asset_name}}</td>
                 <td>{{asset.asset_qty}}</td>
-                <td>{{asset.asset_qty|int * asset.asset_price|float}}</td>
+                <td>{{asset.asset_price|float}}</td>
             </tr>
         
     {% endif %}
