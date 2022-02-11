@@ -51,7 +51,7 @@ coinmarketcap api functions
 Get api crypto data from coinmarketcap
 https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyListingsLatest
 '''
-def print_crypto_prices():
+def get_crypto_prices():
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
     parameters = {
     'start':'1',
@@ -80,7 +80,7 @@ https://commodities-api.com/documentation
 
 '''
 
-def print_commodity_prices():
+def get_commodity_prices():
     api_key = os.getenv('COMMODITIES_API_KEY')
     response = requests.get('https://commodities-api.com/api/latest?access_key='+api_key)
     
@@ -94,7 +94,7 @@ https://polygon.io/docs/stocks/getting-started
 
 '''
 
-def print_stock_prices():
+def get_stock_prices():
     api_key = os.getenv('STOCKS_API_KEY')
     response = requests.get('https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/2021-12-22?adjusted=true&apiKey='+api_key)
     with open('stock_prices.json', 'a', encoding='utf-8') as f:
@@ -116,7 +116,7 @@ returns data in the form of a list of tuples
 [('Bitcoin', 48705.177689493146), (...)]
 
 '''
-def get_crypto_prices()-> list:
+def list_crypto_prices()-> list:
     data = {}
     prices = []
     with open('website\prices\crypto_prices.json','r', encoding="utf8") as f:
@@ -143,7 +143,7 @@ GET PRICES FOR COMMODITIES
 returns data in the form of a list of tuples
 [('JFH', 705.2), (...)]
 '''
-def get_commodity_prices()-> list:
+def list_commodity_prices()-> list:
     data = {}
     prices = []
     with open('website\prices\commodity_prices.json','r', encoding="utf8") as f:
@@ -172,7 +172,7 @@ GET PRICES FOR STOCKS
 returns data in the form of a list of tuples
 [('AAPL', 178.2), (...)]
 '''
-def get_stock_prices()-> list:
+def list_stock_prices()-> list:
     data = {}
     prices = []
     with open('website\prices\stock_prices.json','r', encoding="utf8") as f:
@@ -202,7 +202,7 @@ GET PRICES FOR ALTERNATIVE ASSETS
 returns data in the form of a list of tuples
 [('WATCH id# 102938', 1078.2), (...)]
 '''
-def get_alternative_prices()->list:
+def list_alternative_prices()->list:
     inpt_lst = [("ROLEX watch (Cosmograph Daytona Chronograph Automatic Men's Oysterflex Watch 116518BKCSR)", 56000.00),("House #8293", 976883.00)]
     prices = []
 
@@ -222,6 +222,14 @@ def get_alternative_prices()->list:
         prices.append((name,price,'alternative'))
 
     return prices
+
+'''
+- here I will need to write functions to get curr price of one particular asset,  for each asset class
+- write a refresh_prices function
+'''
+def refresh_prices():
+    get_alternative_prices()
+
 
 
 # remove chars from asset_price

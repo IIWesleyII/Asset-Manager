@@ -34,17 +34,17 @@ def market():
         asset = request.form.get('asset_type')
 
         if asset == 'cryptocurrency':
-            return render_template("market.html", asset_prices = get_crypto_prices(), user=current_user)
+            return render_template("market.html", asset_prices = list_crypto_prices(), user=current_user)
         elif asset == 'commodities':
-            return render_template("market.html", asset_prices = get_commodity_prices(), user=current_user)
+            return render_template("market.html", asset_prices = list_commodity_prices(), user=current_user)
         elif asset == 'stocks':
-            return render_template("market.html", asset_prices = get_stock_prices(), user=current_user)
+            return render_template("market.html", asset_prices = list_stock_prices(), user=current_user)
         elif asset == 'alternative':
-            return render_template("market.html", asset_prices = get_alternative_prices(), user=current_user)
+            return render_template("market.html", asset_prices = list_alternative_prices(), user=current_user)
         else:
             raise ValueError('Choose valid asset type.')
         
-    return render_template("market.html", asset_prices = get_crypto_prices(), user=current_user)
+    return render_template("market.html", asset_prices = list_crypto_prices(), user=current_user)
 
 
 @views.route('/profile')

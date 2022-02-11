@@ -3,7 +3,7 @@ from sqlalchemy.sql import func
 from .models import Users, Codes
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
-from .helper import *
+from .finance import *
 from .send_sms import send_sms_code, send_email_code
 from flask_login import login_user, login_required, logout_user, current_user
 import pickle, os
