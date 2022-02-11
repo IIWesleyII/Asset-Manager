@@ -69,7 +69,7 @@ def get_crypto_prices():
     try:
         response = session.get(url, params=parameters)
         data = json.loads(response.text)
-        with open('crypto_prices.json', 'a', encoding='utf-8') as f:
+        with open('website/prices/crypto_prices.json', 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
     except (ConnectionError, Timeout, TooManyRedirects) as e:
@@ -84,7 +84,7 @@ def get_commodity_prices():
     api_key = os.getenv('COMMODITIES_API_KEY')
     response = requests.get('https://commodities-api.com/api/latest?access_key='+api_key)
     
-    with open('commodity_prices.json', 'a', encoding='utf-8') as f:
+    with open('website/prices/commodity_prices.json', 'w', encoding='utf-8') as f:
             json.dump(response.json(), f, ensure_ascii=False, indent=4)
     if response.status_code != 200:
         print(response.status_code)
@@ -97,7 +97,7 @@ https://polygon.io/docs/stocks/getting-started
 def get_stock_prices():
     api_key = os.getenv('STOCKS_API_KEY')
     response = requests.get('https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/2021-12-22?adjusted=true&apiKey='+api_key)
-    with open('stock_prices.json', 'a', encoding='utf-8') as f:
+    with open('website/prices/stock_prices.json', 'w', encoding='utf-8') as f:
             json.dump(response.json(), f, ensure_ascii=False, indent=4)
     if response.status_code != 200:
         print(response.status_code)
@@ -226,10 +226,13 @@ def list_alternative_prices()->list:
 '''
 - here I will need to write functions to get curr price of one particular asset,  for each asset class
 - write a refresh_prices function
+    - async?
 '''
+# get the current asset prices from various asset APIs
 def refresh_prices():
-    get_alternative_prices()
-
+    get_commodity_prices()
+    get_crypto_prices()
+    get_stock_prices()
 
 
 # remove chars from asset_price
