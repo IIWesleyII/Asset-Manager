@@ -254,7 +254,7 @@ def change_price(asset_price)->float:
 # find the total evaluation of a users assests
 def find_total_asset_value(assets) -> float:
     currency_multiplier,currency_symbol = currency_converter(current_user.base_currency)
-    refresh_prices()
+    #refresh_prices()
 
     stock_data,commodity_data,crypto_data, = {},{},{}
     with open('website\prices\crypto_prices.json','r', encoding="utf8") as f:
