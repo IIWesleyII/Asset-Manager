@@ -105,15 +105,15 @@ def get_stock_prices():
     if response.status_code != 200:
         print(response.status_code)
 
-'''
-Send API Data to JSON files
-print_commodity_prices()
-print_crypto_prices()
-print_stock_prices()
-'''
 
 '''
-GET PRICES FOR Crytpocurrency
+Get all prices for all assets
+
+'''
+
+
+'''
+return prices for crytpocurrency from crypto_prices.json
 returns data in the form of a list of tuples
 [('Bitcoin', 48705.177689493146), (...)]
 '''
@@ -140,7 +140,7 @@ def list_crypto_prices()-> list:
     return prices
 
 '''
-GET PRICES FOR COMMODITIES
+return prices for commodities from commodity_prices.json
 returns data in the form of a list of tuples
 [('JFH', 705.2), (...)]
 '''
@@ -169,7 +169,7 @@ def list_commodity_prices()-> list:
 
 
 '''
-GET PRICES FOR STOCKS
+return prices for stocks from stock_prices.json
 returns data in the form of a list of tuples
 [('AAPL', 178.2), (...)]
 '''
@@ -198,7 +198,7 @@ def list_stock_prices()-> list:
 
 
 '''
-GET PRICES FOR ALTERNATIVE ASSETS
+return prices for alternative assets
  - alternative assets such as cars, luxury goods, housing, etc
 returns data in the form of a list of tuples
 [('WATCH id# 102938', 1078.2), (...)]
@@ -225,31 +225,11 @@ def list_alternative_prices()->list:
     return prices
 
 '''
-- here I will need to write functions to get curr price of one particular asset,  for each asset class
-- write a refresh_prices function
-    - async?
+- generates lookup dictionary of all current prices of assets
+    - combines all the price json files in the price folder
+    - currency_multiplier is the exchange rate either Dollar or Euro
 '''
-# get the current asset prices from various asset APIs
-# remeber to coment out any calls to this function to prevent API fees
-def refresh_prices():
-    get_commodity_prices()
-    get_crypto_prices()
-    get_stock_prices()
-
-
-# remove chars from asset_price
-def change_price(asset_price)->float:
-    new_price = ''
-    for ch in asset_price:
-        if ch.isdigit() or ch == '.':
-            new_price += ch
-    return float(new_price)
-
-
-# find the total evaluation of a users assests
-def find_total_asset_value(assets) -> float:
-    currency_multiplier,currency_symbol = currency_converter(current_user.base_currency)
-    #refresh_prices()
+def generate_all_asset_prices(currency_multiplier)->None:
 
     stock_data,commodity_data,crypto_data, = {},{},{}
     with open('website\prices\crypto_prices.json','r', encoding="utf8") as f:
@@ -284,10 +264,41 @@ def find_total_asset_value(assets) -> float:
         name = key
         price = val
         asset_dict[name] = price
-    ##
-    #now should save dict to prices folder
+
+    # write asset_dict to json file
+    with open(r'website\prices\all_asset_prices.json','w', encoding="utf8") as f:
+        json.dump(asset_dict,f)
 
 
+# get the current asset prices from various asset APIs
+# remeber to coment out any calls to this function to prevent API fees
+def refresh_prices():
+    get_commodity_prices()
+    get_crypto_prices()
+    get_stock_prices()
+
+
+# remove chars from asset_price
+def change_price(asset_price)->float:
+    new_price = ''
+    for ch in asset_price:
+        if ch.isdigit() or ch == '.':
+            new_price += ch
+    return float(new_price)
+
+
+# find the total evaluation of a users assests
+def find_total_asset_value(assets) -> float:
+    currency_multiplier,currency_symbol = currency_converter(current_user.base_currency)
+    #refresh_prices()
+
+    generate_all_asset_prices(currency_multiplier)
+
+    # read prices of all assets and save in asset dict
+    asset_dict = {}
+    with open(r'website\prices\all_asset_prices.json','r', encoding="utf8") as f:
+        asset_dict=json.load(f)
+    
     total_value = 0.0
     for asset in assets:
         ## lookup current price of asset 
