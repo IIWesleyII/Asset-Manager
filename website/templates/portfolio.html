@@ -46,7 +46,7 @@
            
         </tr>
 {% for asset in assets %}
-    {%if asset.asset_qty|int > 0 %}
+    {%if asset.asset_qty|float > 0 %}
             <tr>
                 <td>{{asset.asset_type}}</td>
                 <td>{{asset.asset_name}}</td>

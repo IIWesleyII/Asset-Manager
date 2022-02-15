@@ -13,7 +13,6 @@ This file contains
 - functions to get outside financial API data
 - convert currency and assets
 - generate json files of current asset prices
-
 '''
 
 '''
@@ -83,7 +82,6 @@ def get_crypto_prices():
 '''
 Get commodity api data from commodities-api
 https://commodities-api.com/documentation
-
 '''
 def get_commodity_prices():
     api_key = os.getenv('COMMODITIES_API_KEY')
@@ -98,7 +96,6 @@ def get_commodity_prices():
 '''
 Get stock api data from polygon
 https://polygon.io/docs/stocks/getting-started
-
 '''
 def get_stock_prices():
     api_key = os.getenv('STOCKS_API_KEY')
@@ -113,14 +110,12 @@ Send API Data to JSON files
 print_commodity_prices()
 print_crypto_prices()
 print_stock_prices()
-
 '''
 
 '''
 GET PRICES FOR Crytpocurrency
 returns data in the form of a list of tuples
 [('Bitcoin', 48705.177689493146), (...)]
-
 '''
 def list_crypto_prices()-> list:
     data = {}
