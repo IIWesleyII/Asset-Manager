@@ -47,7 +47,7 @@ def currency_converter(base_currency):
 
 '''
 coinmarketcap api functions
-Get api crypto data from coinmarketcap
+get api crypto data from coinmarketcap
 https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyListingsLatest
 '''
 def get_crypto_prices():
@@ -74,13 +74,9 @@ def get_crypto_prices():
     except (ConnectionError, Timeout, TooManyRedirects) as e:
         print(e)
 
-    '''
-    -overwrite crypto prices
-    - 
-    '''
     
 '''
-Get commodity api data from commodities-api
+get commodity api data from commodities-api
 https://commodities-api.com/documentation
 '''
 def get_commodity_prices():
@@ -94,7 +90,7 @@ def get_commodity_prices():
 
 
 '''
-Get stock api data from polygon
+get stock api data from polygon
 https://polygon.io/docs/stocks/getting-started
 '''
 def get_stock_prices():
@@ -104,12 +100,6 @@ def get_stock_prices():
             json.dump(response.json(), f, ensure_ascii=False, indent=4)
     if response.status_code != 200:
         print(response.status_code)
-
-
-'''
-Get all prices for all assets
-
-'''
 
 
 '''
@@ -224,6 +214,7 @@ def list_alternative_prices()->list:
 
     return prices
 
+
 '''
 - generates lookup dictionary of all current prices of assets
     - combines all the price json files in the price folder
@@ -270,15 +261,19 @@ def generate_all_asset_prices(currency_multiplier)->None:
         json.dump(asset_dict,f)
 
 
-# get the current asset prices from various asset APIs
-# remeber to coment out any calls to this function to prevent API fees
+'''
+get the current asset prices from various asset APIs
+remeber to coment out any calls to this function to prevent API fees
+'''
 def refresh_prices():
     get_commodity_prices()
     get_crypto_prices()
     get_stock_prices()
 
 
-# remove chars from asset_price
+'''
+remove chars from asset_price
+'''
 def change_price(asset_price)->float:
     new_price = ''
     for ch in asset_price:
@@ -287,7 +282,9 @@ def change_price(asset_price)->float:
     return float(new_price)
 
 
-# find the total evaluation of a users assests
+'''
+return the total (Dollar or Euro) value of all the user's assets
+'''
 def find_total_asset_value(assets) -> float:
     currency_multiplier,currency_symbol = currency_converter(current_user.base_currency)
     #refresh_prices()
@@ -313,7 +310,10 @@ def find_total_asset_value(assets) -> float:
     return round(total_value,3)
 
 
-# append to the list of asset changes over time
+'''
+append to portfolio chart data
+    - data points are the date of the transaction, and the user's current net total asset value
+'''
 def generate_chart_plot_data(lst=[])->list:
     # refresh_prices()
     if lst == []:
