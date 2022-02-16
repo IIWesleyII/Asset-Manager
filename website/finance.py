@@ -302,8 +302,8 @@ def find_total_asset_value(assets) -> float:
         asset_name = asset.asset_name
         try:
             curr_price=asset_dict[asset_name]
-            if float(curr_price) > 0 and int(asset.asset_qty) > 0:
-                total_value += int(asset.asset_qty) * float(curr_price)
+            if float(curr_price) > 0 and float(asset.asset_qty) > 0:
+                total_value += float(asset.asset_qty) * float(curr_price)
         except:
             raise ValueError(f"{asset_name} ,Key not found")
         ##
