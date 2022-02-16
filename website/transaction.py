@@ -20,7 +20,6 @@ Function allows for users to buy assets using their payment type
 @transaction.route('/transaction/buy/<string:asset_name>/<string:asset_price>/<string:asset_type>',methods=['GET','POST'])
 @login_required
 def buy(asset_name,asset_price, asset_type):
-    asset_qty = 0
     if request.method == 'POST':
         try:
             asset_qty = int(request.form.get('qty'))
@@ -64,6 +63,7 @@ def buy(asset_name,asset_price, asset_type):
 
     return render_template("buy.html", user=current_user, asset_name=asset_name, asset_price=asset_price, asset_type=asset_type)
 
+
 ''''
 sell()
 Function allows for users to sell assets using their payment type
@@ -77,17 +77,14 @@ Function allows for users to sell assets using their payment type
 def sell(asset_name,asset_price, asset_type):
     display_total_qty = 0
     try:
-        assets = Assets.query.filter(Assets.user_id==current_user.id)
+        curr_asset_obj = Assets.query.filter(Assets.user_id==current_user.id,Assets.asset_name==asset_name).first()
     except:
-        raise Exception('Assets does not exist.')
+        raise Exception('Asset does not exist.')
     '''
     Display the amount of the asset the current user has
     '''
-   
-    if assets:
-        for asset in assets:
-            if asset.asset_name == asset_name:
-                display_total_qty += int(asset.asset_qty)
+    if curr_asset_obj:
+        display_total_qty += int(curr_asset_obj.asset_qty)
         if display_total_qty > 0:
             flash(f"You have {display_total_qty} {asset_name} to sell.", category="success")
         else:
@@ -109,6 +106,7 @@ def sell(asset_name,asset_price, asset_type):
             user = Users.query.get_or_404(current_user.id)
         except:
             raise Exception('User does not exist.')
+        # if 
         if user.total_asset_value:
             new_total_asset_value = float(user.total_asset_value)
             for i in range(int(asset_qty)):
@@ -125,19 +123,16 @@ def sell(asset_name,asset_price, asset_type):
                 #update current user with new plot point for the total asset value over time graph
                 asset_chart_plot_data = generate_chart_plot_data(pickle.loads(user.asset_chart_plot_data))
                 user.asset_chart_plot_data = pickle.dumps(asset_chart_plot_data)
-
-                flash(f"{asset_qty} sold!", category="success")
+        
         '''
         change asset qty in the Assets table
         '''
-        for asset in assets:
-            if int(asset.asset_qty) < asset_qty:
-                asset_qty -= int(asset.asset_qty)
-                asset.asset_qty = 0
-            elif int(asset.asset_qty) >= asset_qty:
-                 asset.asset_qty = int(asset.asset_qty) -asset_qty
-                 break
-            
+        if int(curr_asset_obj.asset_qty) >= asset_qty and asset_name==curr_asset_obj.asset_name:
+             curr_asset_obj.asset_qty = int(curr_asset_obj.asset_qty) - asset_qty
+             flash(f"{asset_qty} sold!", category="success")
+        else:
+            flash(f"You currently do not have enough {asset_name} to sell.", category="error")
+ 
         db.session.commit()
         return render_template("market.html", user=current_user,asset_name=asset_name, asset_price=asset_price, asset_type=asset_type)
                
