@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="buy-form">
     <h3>Buy</h3>
-    <h5>{{asset_name}} {{asset_price}}</h5>
+    <h5>|ASSET: {{asset_name}}| |PRICE: {{asset_price}}|</h5>
+    <br>
     <form method="POST">
 
         <div class="form-group">
             <label for="qty">Qty</label>
             <input type="text" id="qty" name="qty">
+            <p id="total_price"></p>
         </div>
         <div class="form-group">
             <label for="card_info">Credit Card Number</label>
@@ -17,6 +20,9 @@
 
     </form>
 </div>
+
+
+
 
 
 
