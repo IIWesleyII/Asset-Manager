@@ -1,6 +1,7 @@
-venv
-.env
-website/.env
+**/__pycache__
+**/venv
+**/.env
+**/.vscode
 website/crypto_prices.json
 website/crypto_prices.txt
 website/prices

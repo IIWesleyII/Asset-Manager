@@ -24,7 +24,6 @@ def send_email_code(email,email_verification_code):
     EMAIL_ADDRESS = os.environ.get('EMAIL_ADDRESS')
     EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
-
     msg = EmailMessage()
     msg['Subject'] = 'Asset Manager password recovery'
     msg['From'] = EMAIL_ADDRESS
