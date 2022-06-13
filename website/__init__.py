@@ -10,7 +10,6 @@ DB_NAME = os.getenv('DB_NAME')
 
 def create_app():
     app = Flask(__name__)
-    
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
@@ -29,13 +28,12 @@ def create_app():
     
     # create db
     from .models import Users, Assets
-
     create_database(app)
+
     # init flask login manager
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
-
     @login_manager.user_loader
     def load_user(id):
         return Users.query.get(int(id))

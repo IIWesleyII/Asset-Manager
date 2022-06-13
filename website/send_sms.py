@@ -7,12 +7,10 @@ load_dotenv()
 # the following line needs your Twilio Account SID and Auth Token
 client = Client(os.getenv('SMS_ACCOUNT_SID'), os.getenv('SMS_AUTH_TOKEN'))
 
-
-
-'''
-- body will be the code popped off the code list
-'''
 def send_sms_code(phone_num, sms_verification_code):
+    '''
+    - send verification code to user phone number
+    '''
     client.messages.create(to=phone_num, 
                         from_=os.getenv('SMS_FROM'), 
                         body=f"{sms_verification_code}")
@@ -21,6 +19,9 @@ def send_sms_code(phone_num, sms_verification_code):
 
 
 def send_email_code(email,email_verification_code):
+    '''
+    - send verification code to user email
+    '''
     EMAIL_ADDRESS = os.environ.get('EMAIL_ADDRESS')
     EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 

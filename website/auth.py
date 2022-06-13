@@ -18,9 +18,13 @@ def generate_auth_codes() -> int:
     code_2 = Codes.query.order_by(func.random()).first().auth_code
     return code_1, code_2
 
-
 @auth.route('/login', methods=['GET','POST'])
 def login():
+    '''
+    - Get user input and check against database
+    - redirect to user's portfolio on success
+    - stay on login if failure
+    '''
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -41,6 +45,19 @@ def login():
 
 @auth.route("/password_recovery", methods=['GET','POST'])
 def password_recovery():
+    '''
+    - get user email
+    - if user exists generate verification codes and send them 
+      via email and sms
+        - store verification codes in session variable
+        - redirect to template for user to enter verification codes
+    - else
+        flash error message and stay on password recovery page
+    
+    :send_email_code(): function defined in send_sms.py, sends verification code to user's email
+    :send_sms_code(): function defined in send_sms.py, sends verification code to user's phone
+
+    '''
 
     if request.method == 'POST':
         email = request.form.get('email')
@@ -49,7 +66,8 @@ def password_recovery():
         if user:
             email_verification_code, sms_verification_code = generate_auth_codes()
             send_email_code(user.email, email_verification_code)
-            send_sms_code('+19492856292', sms_verification_code)
+            # hardcoded send_sms
+            send_sms_code(os.getenv('SMS_FROM'), sms_verification_code)
             
             session['email_verification_code'] =  email_verification_code
             session['sms_verification_code'] = sms_verification_code
@@ -63,7 +81,11 @@ def password_recovery():
 
 @auth.route("/sms_verification/", methods=['GET','POST'])
 def sms_verification():
-
+    '''
+    - check if user's verification codes sent via email and sms are the same as the ones stored in the session variable
+    - if the verification codes are entered correctly re direct to change_password template
+    - else flash error message and stay on sms_verification page
+    '''
     email_verification_code = session.get('email_verification_code',None)
     sms_verification_code = session.get('sms_verification_code', None)
     # get form data, compare to session data
@@ -76,12 +98,14 @@ def sms_verification():
         else:
             flash('Incorrect recovery codes', category='error')
 
-
     return render_template('sms_verification.html', user=current_user,)
 
 
 @auth.route("/change_password", methods=['GET','POST'])
 def change_password():
+    '''
+        get user's new email and password and update in the database
+    '''
     if request.method == 'POST':
         email = request.form.get('email')
         password1 = request.form.get('password1')
@@ -109,6 +133,9 @@ def logout():
 
 @auth.route('/sign-up', methods=['GET','POST'])
 def sign_up():
+    '''
+        get user sign up information and a new user to the database
+    '''
     if request.method == 'POST':
         email = request.form.get('email')
         f_name = request.form.get('firstName')

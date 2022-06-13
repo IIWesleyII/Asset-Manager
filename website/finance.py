@@ -9,20 +9,23 @@ from flask_login import current_user
 from dotenv import load_dotenv
 load_dotenv()
 '''
-This file contains 
-- functions to get outside financial API data
-- convert currency and assets
-- generate json files of current asset prices
-'''
+    finance.py
+
+    This file contains 
+    - functions to get outside financial API data
+    - convert currency and assets
+    - generate json files of current asset prices
 
 '''
-CURRENCY CONVERTER
-- For now will be hardcoded, in the future make api call and get proper currency conversions
-    hardcoded 12/22/2021 7:47 AM
-- finds conversion factor of the passed in base_currency
-- $ * (Euro factor) = value in euros
-'''
+
+
 def currency_converter(base_currency):
+    '''
+    CURRENCY CONVERTER
+    - For now will be hardcoded, in the future make api call and get proper currency conversions
+    - finds conversion factor of the passed in base_currency
+    - $ * (Euro factor) = value in euros
+    '''
     conversion_factor = 0
     currency_symbol = ''
     if base_currency == 'Dollars':
@@ -45,12 +48,12 @@ def currency_converter(base_currency):
     return conversion_factor, currency_symbol
 
 
-'''
-coinmarketcap api functions
-get api crypto data from coinmarketcap
-https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyListingsLatest
-'''
 def get_crypto_prices():
+    '''
+    coinmarketcap api functions
+    get api crypto data from coinmarketcap
+    https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyListingsLatest
+    '''
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
     parameters = {
     'start':'1',
@@ -75,11 +78,11 @@ def get_crypto_prices():
         print(e)
 
     
-'''
-get commodity api data from commodities-api
-https://commodities-api.com/documentation
-'''
 def get_commodity_prices():
+    '''
+    get commodity api data from commodities-api
+    https://commodities-api.com/documentation
+    '''
     api_key = os.getenv('COMMODITIES_API_KEY')
     response = requests.get('https://commodities-api.com/api/latest?access_key='+api_key)
     
@@ -89,11 +92,11 @@ def get_commodity_prices():
         print(response.status_code)
 
 
-'''
-get stock api data from polygon
-https://polygon.io/docs/stocks/getting-started
-'''
 def get_stock_prices():
+    '''
+    get stock api data from polygon
+    https://polygon.io/docs/stocks/getting-started
+    '''
     api_key = os.getenv('STOCKS_API_KEY')
     response = requests.get('https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/2021-12-22?adjusted=true&apiKey='+api_key)
     with open('website/prices/stock_prices.json', 'w', encoding='utf-8') as f:
@@ -102,12 +105,12 @@ def get_stock_prices():
         print(response.status_code)
 
 
-'''
-return prices for crytpocurrency from crypto_prices.json
-returns data in the form of a list of tuples
-[('Bitcoin', 48705.177689493146), (...)]
-'''
 def list_crypto_prices()-> list:
+    '''
+    return prices for crytpocurrency from crypto_prices.json
+    returns data in the form of a list of tuples
+    [('Bitcoin', 48705.177689493146), (...)]
+    '''
     data = {}
     prices = []
     with open('website\prices\crypto_prices.json','r', encoding="utf8") as f:
@@ -129,12 +132,13 @@ def list_crypto_prices()-> list:
 
     return prices
 
-'''
-return prices for commodities from commodity_prices.json
-returns data in the form of a list of tuples
-[('JFH', 705.2), (...)]
-'''
+
 def list_commodity_prices()-> list:
+    '''
+    return prices for commodities from commodity_prices.json
+    returns data in the form of a list of tuples
+    [('JFH', 705.2), (...)]
+    '''
     data = {}
     prices = []
     with open('website\prices\commodity_prices.json','r', encoding="utf8") as f:
@@ -158,12 +162,12 @@ def list_commodity_prices()-> list:
     return prices
 
 
-'''
-return prices for stocks from stock_prices.json
-returns data in the form of a list of tuples
-[('AAPL', 178.2), (...)]
-'''
 def list_stock_prices()-> list:
+    '''
+    return prices for stocks from stock_prices.json
+    returns data in the form of a list of tuples
+    [('AAPL', 178.2), (...)]
+    '''
     data = {}
     prices = []
     with open('website\prices\stock_prices.json','r', encoding="utf8") as f:
@@ -187,13 +191,13 @@ def list_stock_prices()-> list:
     return prices
 
 
-'''
-return prices for alternative assets
- - alternative assets such as cars, luxury goods, housing, etc
-returns data in the form of a list of tuples
-[('WATCH id# 102938', 1078.2), (...)]
-'''
 def list_alternative_prices()->list:
+    '''
+    return prices for alternative assets
+    - alternative assets such as cars, luxury goods, housing, etc
+    returns data in the form of a list of tuples
+    [('WATCH id# 102938', 1078.2), (...)]
+    '''
     inpt_lst = [("ROLEX watch (Cosmograph Daytona Chronograph Automatic Men's Oysterflex Watch 116518BKCSR)", 56000.00),("House #8293", 976883.00)]
     prices = []
 
@@ -215,12 +219,12 @@ def list_alternative_prices()->list:
     return prices
 
 
-'''
-- generates lookup dictionary of all current prices of assets
-    - combines all the price json files in the price folder
-    - currency_multiplier is the exchange rate either Dollar or Euro
-'''
 def generate_all_asset_prices(currency_multiplier)->None:
+    '''
+    - generates lookup dictionary of all current prices of assets
+        - combines all the price json files in the price folder
+        - currency_multiplier is the exchange rate either Dollar or Euro
+    '''
 
     stock_data,commodity_data,crypto_data, = {},{},{}
     with open('website\prices\crypto_prices.json','r', encoding="utf8") as f:
@@ -260,32 +264,29 @@ def generate_all_asset_prices(currency_multiplier)->None:
     with open(r'website\prices\all_asset_prices.json','w', encoding="utf8") as f:
         json.dump(asset_dict,f)
 
-
-'''
-get the current asset prices from various asset APIs
-remeber to coment out any calls to this function to prevent API fees
-'''
 def refresh_prices():
+    '''
+    get the current asset prices from various asset APIs
+    remeber to coment out any calls to this function to prevent API fees
+    '''
     get_commodity_prices()
     get_crypto_prices()
     get_stock_prices()
 
-
-'''
-remove chars from asset_price
-'''
 def change_price(asset_price)->float:
+    '''
+    remove chars from asset_price
+    '''
     new_price = ''
     for ch in asset_price:
         if ch.isdigit() or ch == '.':
             new_price += ch
     return float(new_price)
 
-
-'''
-return the total (Dollar or Euro) value of all the user's assets
-'''
 def find_total_asset_value(assets) -> float:
+    '''
+    return the total (Dollar or Euro) value of all the user's assets
+    '''
     currency_multiplier,currency_symbol = currency_converter(current_user.base_currency)
     #refresh_prices()
 
@@ -309,12 +310,11 @@ def find_total_asset_value(assets) -> float:
         ##
     return round(total_value,3)
 
-
-'''
-append to portfolio chart data
-    - data points are the date of the transaction, and the user's current net total asset value
-'''
 def generate_chart_plot_data(lst=[])->list:
+    '''
+    append to portfolio chart data
+        - data points are the date of the transaction, and the user's current net total asset value
+    '''
     # refresh_prices()
     if lst == []:
         return [(f'{datetime.now().ctime()}',0.0)]

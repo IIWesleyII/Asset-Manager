@@ -9,7 +9,6 @@ api = Blueprint('api',__name__)
 def home_api():
     return '<h1>Asset Manager Api</h1>'
 
-
 @api.route('/api/v1/user', methods = ['GET'])
 def get_users():
     users = Users.query.all()
@@ -29,7 +28,6 @@ def get_users():
     else:
         return {'error':'users not found'} , 404
 
-
 @api.route('/api/v1/user/<int:id>', methods = ['GET'])
 def get_user_by_id(id):
     user = Users.query.get(id)
@@ -45,7 +43,6 @@ def get_user_by_id(id):
     else:
         return {'error':'user not found'} ,404
 
-
 @api.route('/api/v1/user/email/<string:email>', methods = ['GET'])
 def get_user_by_email(email):
     user = Users.query.filter_by(email=email).first()
@@ -60,7 +57,6 @@ def get_user_by_email(email):
             }
     else:
         return {'error':'user not found'} ,404
-
 
 @api.route('/api/v1/user/country/<string:country>', methods = ['GET'])
 def get_users_by_country(country):
@@ -81,7 +77,6 @@ def get_users_by_country(country):
     else:
         return {'error':'Country has no users'} ,404
 
-
 @api.route('/api/v1/user/premium', methods = ['GET'])
 def get_premium_users():
     users = Users.query.filter_by(is_premium=True)
@@ -100,7 +95,6 @@ def get_premium_users():
         return {'users':output}, 200
     else:
         return {'error':'No premium users'} ,404
-
 
 @api.route('/api/v1/user/richest', methods = ['GET'])
 def get_richest_user():
@@ -125,7 +119,6 @@ def get_richest_user():
             }}, 200
     else:
         return {'error':'No users found'} ,404
-
 
 @api.route('/api/v1/user/total-assets', methods = ['GET'])
 def get_total_asset_value_of_users():

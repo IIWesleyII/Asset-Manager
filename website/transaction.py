@@ -9,17 +9,18 @@ import datetime, pickle
 
 transaction = Blueprint('transaction', __name__)
 
-''''
-buy()
-Function allows for users to buy assets using their payment type
-    i) accepts and authenticates payment info
-    ii) updates user's asset balance
-    iii) updates user's portfolio graph
-    iv) create's new asset for user
-'''
+
 @transaction.route('/transaction/buy/<string:asset_name>/<string:asset_price>/<string:asset_type>',methods=['GET','POST'])
 @login_required
 def buy(asset_name,asset_price, asset_type):
+    ''''
+    buy()
+    Function allows for users to buy assets using their payment type
+        i) accepts and authenticates payment info
+        ii) updates user's asset balance
+        iii) updates user's portfolio graph
+        iv) create's new asset for user
+    '''
     asset_qty = 0
     if request.method == 'POST':
         try:
@@ -38,16 +39,19 @@ def buy(asset_name,asset_price, asset_type):
                     user = Users.query.get_or_404(current_user.id)
                 except:
                     raise Exception('User does not exist.')
+                    
                 # update curr user total_asset value by purchase value
                 if current_user.total_asset_value:
                     user.total_asset_value = round(float(current_user.total_asset_value) +  purchase_value,3)
                 else:
                     user.total_asset_value = round(purchase_value,3)
+
                 #update current user with new plot point for the totatal asset value over time graph
                 asset_chart_plot_data = generate_chart_plot_data(pickle.loads(user.asset_chart_plot_data))
                 user.asset_chart_plot_data = pickle.dumps(asset_chart_plot_data)
                 x = pickle.loads(user.asset_chart_plot_data)
                 asset = Assets.query.filter(Assets.user_id==current_user.id, Assets.asset_name==asset_name).first()
+
                 if asset:
                     asset.asset_qty = float(asset.asset_qty) + float(asset_qty)
                     asset.asset_price = new_price
@@ -65,26 +69,25 @@ def buy(asset_name,asset_price, asset_type):
     return render_template("buy.html", user=current_user, asset_name=asset_name, asset_price=asset_price, asset_type=asset_type)
 
 
-''''
-sell()
-Function allows for users to sell assets using their payment type
-    i) check if user has enough assets to sell
-    ii) updates user's asset balance
-    iii) updates user's portfolio graph
-    iv) updates asset for user
-'''
 @transaction.route('/transaction/sell/<string:asset_name>/<string:asset_price>/<string:asset_type>',methods=['GET','POST'])
 @login_required
 def sell(asset_name,asset_price, asset_type):
+    ''''
+    sell()
+    Function allows for users to sell assets using their payment type
+        i) check if user has enough assets to sell
+        ii) updates user's asset balance
+        iii) updates user's portfolio graph
+        iv) updates asset for user
+    '''
     asset_qty = 0
     display_total_qty = 0
     try:
         curr_asset_obj = Assets.query.filter(Assets.user_id==current_user.id,Assets.asset_name==asset_name).first()
     except:
         raise Exception('Asset does not exist.')
-    '''
-    Display the amount of the asset the current user has
-    '''
+
+    #Display the amount of the asset the current user has
     if curr_asset_obj:
         display_total_qty += float(curr_asset_obj.asset_qty)
         if display_total_qty > 0:
@@ -94,9 +97,7 @@ def sell(asset_name,asset_price, asset_type):
     else:
         flash(f"You currently do not have any {asset_name} to sell.", category="error")
     
-    '''
-    Subtract the sell amount from the current user's total asset value
-    '''
+    #Subtract the sell amount from the current user's total asset value
     if request.method == 'POST':
         try:
             asset_qty = float(request.form.get('qty'))
